@@ -1,0 +1,154 @@
+from django.contrib.auth.models import User
+from news.models import Author
+from news.models import Post
+from news.models import Category
+from news.models import Comment
+
+
+user = User.objects.create_user("user1", "1@qq.com", "1password")
+# user.last_name = "Lennon"
+user.save()
+user = User.objects.create_user("user2", "2@qq.com", "2password")
+user.save()
+    # user = User.objects.create_user("user3", "3@qq.com", "3password")
+    # user.save()
+    # user = User.objects.create_user("user4", "4@qq.com", "3password")
+    # user.save()
+
+        Проверка:
+    User.objects.all().values('username', 'email', 'password')
+
+author = Author(user = User.objects.get(username = 'user1'))
+author.save()
+author = Author(user = User.objects.get(username = 'user2'))
+author.save()
+
+        Проверка привязанных к Author свойств пользователей в User:
+    Author.objects.all().values("user__username", "user__email", "user__password")
+
+category = Category(category = "sport")
+category.save()
+category = Category(category = "politics")
+category.save()
+category = Category(category = "economics")
+category.save()
+category = Category(category = "science and technology")
+category.save()
+
+            Проверка всех категорий:
+    Category.objects.all().values()
+
+            Внесение поста 1:
+author1 = Author.objects.get(user = User.objects.get(username = 'user1'))
+post = Post(author = author1, type = 'ARTICLE', tittle = "Tittle1", text = "text1")
+post.save()
+            Проверка всех полей поста, имеющих одно значение
+    Post.objects.all().values()
+
+category1 = Category.objects.get(category = "science and technology")
+category2 = Category.objects.get(category = "economics")
+
+category1.post_set.add(post)
+category2.post_set.add(post)
+            Проверка всех перечисленных полей поста
+    Post.objects.all().values("author", "type", "time", "category", "tittle", "text", "rating")
+
+            Внесение поста 2:
+author2 = Author.objects.get(user = User.objects.get(username = 'user2'))
+post = Post(author = author2, type = 'NEWS', tittle = "Tittle2", text = "text2")
+post.save()
+
+category1 = Category.objects.get(category = "economics")
+category2 = Category.objects.get(category = "politics")
+
+category1.post_set.add(post)
+category2.post_set.add(post)
+            Проверка всех перечисленных полей постов
+    Post.objects.all().values("author", "type", "time", "category", "tittle", "text", "rating")
+
+Внесение поста 3:
+author1 = Author.objects.get(user = User.objects.get(username = 'user1'))
+post = Post(author = author1, type = 'NEWS', tittle = "Tittle3", text = "text3")
+post.save()
+
+category1 = Category.objects.get(category = "sport")
+category2 = Category.objects.get(category = "science and technology")
+
+category1.post_set.add(post)
+category2.post_set.add(post)
+            Проверка всех перечисленных полей постов
+    Post.objects.all().values("author", "type", "time", "category", "tittle", "text", "rating")
+
+            Добавление комментариев к постам
+post1 = Post.objects.get(id = 1)
+post2 = Post.objects.get(id = 2)
+post3 = Post.objects.get(id = 3)
+
+admin = User.objects.get(id = 1)
+user_1 = User.objects.get(username = 'user1')
+user_2 = User.objects.get(username = 'user2')
+
+comment = Comment.objects.create(post = post1, user = user_1, text = "Comment_1")
+comment.save()
+comment = Comment.objects.create(post = post1, user = admin, text = "Comment_2")
+comment.save()
+comment = Comment.objects.create(post = post2, user = user_1, text = "Comment_3")
+comment.save()
+comment = Comment.objects.create(post = post3, user = user_2, text = "Comment_4")
+comment.save()
+
+            Лайки постам. Рейтинг: (1: 3, 2: 1, 3: 3)
+post1.like()
+post1.like()
+
+post2.like()
+post2.dislike()
+post2.like()
+
+post3.like()
+post3.like()
+post3.like()
+
+            Проверка всех перечисленных полей постов
+    Post.objects.all().values("author", "type", "time", "category", "tittle", "text", "rating")
+
+comment1 = Comment.objects.get(id = 1)
+comment2 = Comment.objects.get(id = 2)
+comment3 = Comment.objects.get(id = 3)
+comment4 = Comment.objects.get(id = 4)
+
+comment1.like()
+comment1.like()
+
+comment2.like()
+comment2.dislike()
+
+comment3.like()
+
+comment4.dislike()
+
+                        Проверка всех комментариев
+        Comment.objects.all().values()
+
+                        Обновление рейтингов авторов
+author1 = Author.objects.get(id = 1)
+author1.update_rating()
+author2 = Author.objects.get(id = 2)
+author2.update_rating()
+                        Проверка рейтингов авторов
+        Author.objects.all().values()
+
+                        Выбор лучшего автора
+Author.objects.all().order_by('-rating').values('user__username')[0]['user__username']
+
+                        Свойства Posts лучшего поста
+Post.objects.all().order_by('-rating').values('time', 'author', 'rating', 'tittle')[0]
+
+                        Username автора лучшего поста
+Author.objects.get(id = Post.objects.all().order_by('-rating').values('time', 'author', 'rating', 'tittle')[0]['author']).user.username
+                        
+                        Превью лучшего поста
+Post.objects.get(id = Post.objects.all().order_by('-rating').values('id')[0]['id']).preview()
+
+                        Свойства всех комментариев к лучшему посту
+Comment.objects.filter(post__id = Post.objects.all().order_by('-rating').values('id')[0]['id']).values('time', 'user', 'rating', 'text')
