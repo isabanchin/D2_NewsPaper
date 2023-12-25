@@ -142,7 +142,7 @@ author2.update_rating()
 Author.objects.all().order_by('-rating').values('user__username')[0]['user__username']
 
                         Свойства Posts лучшего поста
-Post.objects.all().order_by('-rating').values('time', 'author', 'rating', 'tittle')[0]
+Post.objects.all().order_by('-rating').values('time', 'author__user__username', 'rating', 'tittle')[0]
 
                         Username автора лучшего поста
 Author.objects.get(id = Post.objects.all().order_by('-rating').values('time', 'author', 'rating', 'tittle')[0]['author']).user.username
@@ -151,4 +151,4 @@ Author.objects.get(id = Post.objects.all().order_by('-rating').values('time', 'a
 Post.objects.get(id = Post.objects.all().order_by('-rating').values('id')[0]['id']).preview()
 
                         Свойства всех комментариев к лучшему посту
-Comment.objects.filter(post__id = Post.objects.all().order_by('-rating').values('id')[0]['id']).values('time', 'user', 'rating', 'text')
+Comment.objects.filter(post = Post.objects.order_by('-rating').first()).values('time', 'user__username', 'rating', 'text')

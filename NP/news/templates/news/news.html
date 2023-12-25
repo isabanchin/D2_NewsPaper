@@ -1,0 +1,13 @@
+<!--  наследуемся от шаблона base.html -->
+{% extends 'layout/base.html' %}
+{% load custom_filters %} <!-- не забываем заранее загружать наши фильтры! -->
+<!-- Название у нас будет prouducts -->
+{% block title %}
+News
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+<h1>Все новости</h1>
+{{ news }}
+{% endblock content %}
