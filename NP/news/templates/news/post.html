@@ -1,15 +1,14 @@
+<!--  наследуемся от шаблона base.html -->
 {% extends 'layout/default.html' %}
 {% load custom_filters %}
 
 Название у нас будет prouducts
 {% block title %}
-News
+Post
 {% endblock title %}
 
+<!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-<!-- <h1>Все новости</h1> -->
-<h3> Всего новостей в ленте: {{ news|length }} </h3>
-{% if news %}
 <table class="table">
     <tr>
         <th scope="col">
@@ -22,7 +21,6 @@ News
             Описание
         </th>
     </tr>
-    {% for post in news %}
     <tr>
         <td>
             {{ post.tittle|censor }}
@@ -33,12 +31,8 @@ News
         <td>
             {{ post.text|truncatechars:50|censor }}
         </td>
-
     </tr>
-    {% endfor %}
 </table>
-<!-- {{ news }} -->
-{% else %}
-<h2>Новостей нет!</h2>
-{% endif %}
+<h2>{{ post.tittle|censor }}</h2>
+{{ post.text|censor }}
 {% endblock content %}
