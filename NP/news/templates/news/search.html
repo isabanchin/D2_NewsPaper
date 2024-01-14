@@ -1,0 +1,50 @@
+{% extends 'layout/default.html' %}
+{% load custom_filters %}
+
+Название у нас будет prouducts
+{% block title %}
+Search
+{% endblock title %}
+
+{% block content %}
+<!-- <h1>Все новости</h1> -->
+<h3> Всего новостей в ленте: {{ postsearch|length }} </h3>
+{% if postsearch %}
+<!-- Перед таблицей добавим форму для поиска -->
+<form method="GET">
+    {{ filter.form }}
+    <!-- Форму от фильтров за нас сделает Django. А вот кнопку, увы, придётся делать самим -->
+    <input class="btn btn-primary" type="submit" value="Найти">
+</form>
+<table class="table">
+    <tr>
+        <th scope="col">
+            Заголовок
+        </th>
+        <th scope="col">
+            Дата
+        </th>
+        <th scope="col">
+            Описание
+        </th>
+    </tr>
+    {% for post in filter.qs %}
+    <tr>
+        <td>
+            {{ post.tittle|censor }}
+        </td>
+        <td>
+            {{ post.time|date:'d-M-Y h:m' }}
+        </td>
+        <td>
+            {{ post.text|truncatechars:50|censor }}
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<h2>Новостей нет!</h2>
+{% endif %}
+{% endblock content %}

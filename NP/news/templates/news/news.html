@@ -37,6 +37,7 @@ News
     </tr>
     {% endfor %}
 </table>
+{% include 'news/parts/paginator.html' %}
 <!-- {{ news }} -->
 {% else %}
 <h2>Новостей нет!</h2>
