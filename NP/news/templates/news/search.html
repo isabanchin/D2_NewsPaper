@@ -8,8 +8,8 @@ Search
 
 {% block content %}
 <!-- <h1>Все новости</h1> -->
-<h3> Всего новостей в ленте: {{ postsearch|length }} </h3>
-{% if postsearch %}
+<h3> Всего новостей в ленте: {{ post_search|length }} </h3>
+{% if post_search %}
 <!-- Перед таблицей добавим форму для поиска -->
 <form method="GET">
     {{ filter.form }}

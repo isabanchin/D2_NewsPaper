@@ -25,7 +25,7 @@ News
     {% for post in news %}
     <tr>
         <td>
-            {{ post.tittle|censor }}
+            <a href="{% url 'news:post_detail' post.id %}">{{ post.tittle|censor }}</a>
         </td>
         <td>
             {{ post.time|date:'d-M-Y h:m' }}
@@ -33,7 +33,14 @@ News
         <td>
             {{ post.text|truncatechars:50|censor }}
         </td>
-
+        <td>
+            <a href="{% url 'news:post_edit' post.id %}">
+                Edit
+            </a>
+            <a href="{% url 'news:post_delete' post.id %}">
+                Delete
+            </a>
+        </td>
     </tr>
     {% endfor %}
 </table>
