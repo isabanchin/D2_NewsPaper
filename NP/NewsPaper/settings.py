@@ -39,15 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'news',
-    'django_filters',
     'django.contrib.sites',
+    'django_filters',
     # 3rd party apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     # ... здесь нужно указать провайдеры, которые планируете использовать
     'allauth.socialaccount.providers.google',
+    # User apps
+    'news',
 ]
 
 MIDDLEWARE = [
@@ -157,6 +158,9 @@ SITE_ID = 1
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+
+ACCOUNT_FORMS = {'signup': 'news.forms.BasicSignupForm'}

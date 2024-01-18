@@ -1,7 +1,7 @@
 {% extends 'layout/default.html' %}
 {% load custom_filters %}
 
-Название у нас будет prouducts
+<!-- Название у нас будет prouducts -->
 {% block title %}
 Post editing
 {% endblock title %}
@@ -14,4 +14,13 @@ Post editing
     <!-- Теперь нам нужна только готовая форма и кнопка -->
     <input class="btn btn-success" type="submit" value="Add">
 </form>
+{% if is_not_author %}
+<a class="btn btn-info" href="{% url 'protected:upgrade' %}">
+    Стать автором
+</a>
+{% else %}
+<h3>
+    Вы в группе "Authors"
+</h3>
+{% endif %}
 {% endblock content %}
