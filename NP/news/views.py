@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.views import View  # Импортируем простую вьюшку
 from django.urls import reverse, reverse_lazy
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+
 # позволяет выводить данные модели пользователя во view
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 # Импортируем класс, позволяющий удобно осуществлять постраничный вывод
@@ -87,6 +90,10 @@ class PostUpdateView(UpdateView):  # дженерик для редактиро�
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
+
+
+class ProtectedView(LoginRequiredMixin, TemplateView):
+    template_name = 'news/post_create.html'
 
 
 class PostDeleteView(DeleteView):  # дженерик для удаления товара
