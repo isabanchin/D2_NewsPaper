@@ -95,6 +95,16 @@ class PostUpdateView(UpdateView):  # дженерик для редактиро�
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
 
+
+class ProtectedView(LoginRequiredMixin, TemplateView):
+    template_name = 'user.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(
+            name='author').exists()
+        return context
+
 # Добавляем функциональное представление для повышения привилегий пользователя до членства в группе premium
 
 
@@ -104,17 +114,7 @@ def upgrade_me(request):
     authors_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
         authors_group.user_set.add(user)
-    return redirect('/')
-
-
-class ProtectedView(LoginRequiredMixin, TemplateView):
-    template_name = 'news/post_create.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['is_not_author'] = not self.request.user.groups.filter(
-            name='author').exists()
-        return context
+    return redirect('/news')
 
 
 class PostDeleteView(DeleteView):  # дженерик для удаления товара
