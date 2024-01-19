@@ -9,10 +9,6 @@
     Здесь может содержаться персональная информация для каждого пользователя
 </div>
 
-<!-- <a class="btn btn-primary" href="{% url 'news:logout' %}">
-    Выйти
-</a> -->
-
 {% if is_not_author %}
 
 <a class="btn btn-info" href="{% url 'news:user' %}">

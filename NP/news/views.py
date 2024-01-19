@@ -96,7 +96,7 @@ class PostUpdateView(UpdateView):  # дженерик для редактиро�
         return Post.objects.get(pk=id)
 
 
-class ProtectedView(LoginRequiredMixin, TemplateView):
+class UserView(LoginRequiredMixin, TemplateView):
     template_name = 'user.html'
 
     def get_context_data(self, **kwargs):
