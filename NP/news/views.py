@@ -105,7 +105,7 @@ class UserView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_not_author'] = not self.request.user.groups.filter(
-            name='author').exists()
+            name='authors').exists()
         return context
 
 # Добавляем функциональное представление для повышения привилегий пользователя до членства в группе premium
@@ -120,8 +120,9 @@ def upgrade_me(request):
     return redirect('/news')
 
 
-class PostDeleteView(DeleteView):  # дженерик для удаления товара
+class PostDeleteView(PermissionRequiredMixin, DeleteView):  # дженерик для удаления товара
     template_name = 'news/post_delete.html'
+    permission_required = ('news.delete_post', )
     queryset = Post.objects.all()
     # не забываем импортировать функцию reverse_lazy из пакета django.urls
     success_url = reverse_lazy('news:news')
