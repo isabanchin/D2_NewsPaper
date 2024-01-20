@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View  # Импортируем простую вьюшку
 from django.urls import reverse, reverse_lazy
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import TemplateView
 
 # Не забываем импортировать нужные функции и пакеты
@@ -60,13 +60,14 @@ class PostSearch(ListView):
         return context
 
 
-class PostCreateView(CreateView):
+class PostCreateView(PermissionRequiredMixin, CreateView):
     model = Post                    # указываем модель объекты которой мы будем выводить
     # указываем имя шаблона в котором будет лежать html с инструкциями для представление для пользователя
     template_name = 'news/post_create.html'
     form_class = PostForm
     # указываем имя списка в котором будут лежать все объекты для обращения к списку объектов через html-шаблон
     context_object_name = 'post_add'
+    permission_required = ('news.add_post', )
 
     # забираем отфильтрованные объекты переопределяя метод get_context_data у наследуемого класса (привет, полиморфизм, мы скучали!!!)
     def get_context_data(self, **kwargs):
@@ -86,9 +87,11 @@ class PostCreateView(CreateView):
         return super().get(request, *args, **kwargs)
 
 
-class PostUpdateView(UpdateView):  # дженерик для редактирования объекта
+# дженерик для редактирования объекта
+class PostUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     template_name = 'news/post_create.html'
     form_class = PostForm
+    permission_required = ('news.change_post', )
 
     # метод get_object мы используем вместо queryset, чтобы получить информацию об объекте который мы собираемся редактировать
     def get_object(self, **kwargs):
