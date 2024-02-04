@@ -6,7 +6,7 @@ def censor(text: str):
     mask = '*'
     for i in text:
         slice += i
-        print(slice)
+        # print(slice)
         lower_slice = slice.lower()
 
         flag = 0
@@ -30,6 +30,6 @@ def censor(text: str):
     return censored_text
 
 
-text = "fds dfsd dsfd wetwe werwe fuck FUCKing a shit"
+# text = "fds dfsd dsfd wetwe werwe fuck FUCKing a shit"
 
-print(censor(text))
+# print(censor(text))

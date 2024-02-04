@@ -8,14 +8,26 @@ Search
 
 {% block content %}
 <!-- <h1>Все новости</h1> -->
-<h3> Всего новостей в ленте: {{ post_search|length }} </h3>
+<h3> Поиск по {{ post_search|length }} постам:</h3>
 {% if post_search %}
 <!-- Перед таблицей добавим форму для поиска -->
 <form method="GET">
     {{ filter.form }}
     <!-- Форму от фильтров за нас сделает Django. А вот кнопку, увы, придётся делать самим -->
     <input class="btn btn-primary" type="submit" value="Найти">
-</form>
+</form><br>
+{% if not_subscribed %}
+<a class="btn btn-primary" href="{% url 'news:subscribe' %}?category_selected={{ category_selected }}">Подписаться на
+    выбранную
+    категорию</a>
+{% endif %}
+{% if not_subscribed == False %}
+<a class="btn btn-info" href="{% url 'news:unsubscribe' %}?category_selected={{ category_selected }}">Отписаться от
+    выбранной
+    категории</a>
+{% endif %}
+{% if form.post.category %}
+{% endif %}
 <table class="table">
     <tr>
         <th scope="col">

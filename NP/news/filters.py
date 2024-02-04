@@ -1,13 +1,16 @@
 # импортируем filterset, чем-то напоминающий знакомые дженерики
 from django_filters import FilterSet
 from django_filters import ModelChoiceFilter
-from .models import Post, Author
+from .models import Post, Author, Category
 
 
 # создаём фильтр
 class PostFilter(FilterSet):
     author = ModelChoiceFilter(field_name='author', label='Автор',
                                lookup_expr='exact', queryset=Author.objects.all())
+
+    category = ModelChoiceFilter(field_name='category', label='Категория',
+                                 lookup_expr='exact', queryset=Category.objects.all())
     # Здесь в мета классе надо предоставить модель и указать поля, по которым будет фильтроваться (т.е. подбираться) информация о товарах
 
     class Meta:

@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Post
+from .models import Post, Category
 from django import forms
 
 from allauth.account.forms import SignupForm
@@ -12,7 +12,7 @@ class PostForm(ModelForm):
     # В класс мета, как обычно, надо написать модель, по которой будет строиться форма, и нужные нам поля. Мы уже делали что-то похожее с фильтрами
     class Meta:
         model = Post
-        fields = ['author', 'tittle', 'text', 'type']
+        fields = ['author', 'tittle', 'text', 'type', 'category']
         widgets = {
             'tittle': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -26,6 +26,9 @@ class PostForm(ModelForm):
                 'class': 'form-control',
             }),
             'author': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'category': forms.SelectMultiple(attrs={
                 'class': 'form-control',
             }),
         }
