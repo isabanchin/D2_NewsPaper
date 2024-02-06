@@ -158,7 +158,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = True
 
 
 ACCOUNT_FORMS = {'signup': 'news.forms.BasicSignupForm'}
@@ -170,6 +171,8 @@ EMAIL_HOST_USER = 'sabanchini'
 EMAIL_HOST_PASSWORD = 'qhshurrwwdduzgdx'  # пароль от почты
 EMAIL_USE_SSL = True  # Яндекс использует ssl, подробнее о том, что это, почитайте на Википедии, но включать его здесь обязательно
 
+# здесь указываем уже свою ПОЛНУЮ почту с которой будут отправляться письма
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -177,3 +180,5 @@ DEBUG = True
 # вывод писем в консоль если DEBUG = True
 # if DEBUG:
 #     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_EMAIL_SUBJECT_PREFIX = 'NewsPaper: '

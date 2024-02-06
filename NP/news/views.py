@@ -159,17 +159,9 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
             print('email_list :', email_list)
             email_set = set(email_list)
             print('email_set:', email_set)
-            # и делаем расссылку писем-уведомлений о новом посте всем подписанным пользователям:
-            # send_mail(
-            #     subject=f"Подписка NewsPaper: {request.POST['tittle']}",
-            #     message=f"Здравствуй, username. Новая статья в твоём любимом разделе! {request.POST['text']}",
-            #     # здесь указываете почту, с которой будете отправлять (об этом попозже)
-            #     from_email='sabanchini@yandex.ru',
-            #     # здесь список получателей. Например, секретарь, сам врач и так далее
-            #     recipient_list=list(email_set)
-            # )
             # пишем цикл перебора значений Username и email множества email_set:
             for i in email_set:
+                # в каждом цикле обновляем нужные поля в объекте fields, передаваемый в темплейт страницы.
                 fields.username = i[0]
                 fields.email = i[1]
             # получем наш html
@@ -179,9 +171,6 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
                         'news': fields,
                     }
                 )
-                tittle = request.POST['tittle']
-                text = request.POST['text']
-
                 # в конструкторе уже знакомые нам параметры, да? Называются правда немного по другому, но суть та же.
                 msg = EmailMultiAlternatives(
                     subject=f"Подписка NewsPaper: {fields.tittle}",
