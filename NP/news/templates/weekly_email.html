@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>Здравствуй, {{context_obj.user}}.</h2>
+    <h3>Сводка новостей за неделю по Вашей подписке</h3>
+    {% for tag in context_obj.tag_list %}
+    {% autoescape off %}
+    {{ tag }}
+    {% endautoescape %}
+    {% endfor %}
+</body>
+
+</html>

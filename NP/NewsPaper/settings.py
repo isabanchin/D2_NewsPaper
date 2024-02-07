@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # ... здесь нужно указать провайдеры, которые планируете использовать
     'allauth.socialaccount.providers.google',
+    # подключаем приложение для периодических задач
+    "django_apscheduler",
     # User apps
     'news',
 ]
@@ -182,3 +184,7 @@ DEBUG = True
 #     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = 'NewsPaper: '
+
+# настройки для django-apscheduler
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds

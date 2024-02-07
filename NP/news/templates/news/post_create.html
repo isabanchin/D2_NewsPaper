@@ -7,11 +7,15 @@ Post editing
 {% endblock title %}
 
 {% block content %}
-
+{% if overposted %}
+<h3>Достигнут лимит три поста в день</h3>
+<p>Новые посты Вы сможете размещать завтра.</p>
+{% else %}
 <form method="POST">
     {% csrf_token %}
     {{ form }}
     <!-- Теперь нам нужна только готовая форма и кнопка -->
     <input class="btn btn-success" type="submit" value="Add">
 </form>
+{% endif %}
 {% endblock content %}

@@ -21,7 +21,8 @@ from django.views.generic import ListView, UpdateView, CreateView, DetailView, D
 from django.core.paginator import Paginator
 from .filters import PostFilter  # импортируем недавно написанный фильтр
 from .forms import PostForm
-from .models import Post, Category, UserCategory
+from .models import Post, Category, UserCategory, User, Author
+import datetime
 
 
 class NewsList(ListView):
@@ -89,16 +90,6 @@ def subscribe_me(request):
     #     id=request.GET['category']).category
     print('user : ', user)
     print(dir(PostSearch))
-    # print('category_selected :', category_selected)
-
-    # subscribe_record = UserCategory(
-    #     user=request.user, category=request.GET)
-    # subscribe_record.save()
-
-    # category_user = UserCategory.objects.get(
-    #     category='category').objects.get(user='user')
-    # if not (request.category.filter(category='category').exists() & request.user.filter(user='user').exists()):
-    #     category_user.user_set.add(user)
     return redirect('/news/search')
 
 
@@ -125,7 +116,7 @@ def unsubscribe(request):
     return redirect('/news/search/?category=' + category_selected)
 
 
-class PostCreateView(PermissionRequiredMixin, CreateView):
+class PostCreateView(PermissionRequiredMixin, CreateView):  # вью создания нового поста
     model = Post                    # указываем модель объекты которой мы будем выводить
     # указываем имя шаблона в котором будет лежать html с инструкциями для представление для пользователя
     template_name = 'news/post_create.html'
@@ -136,12 +127,30 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
 
     # забираем отфильтрованные объекты переопределяя метод get_context_data у наследуемого класса (привет, полиморфизм, мы скучали!!!)
     def get_context_data(self, **kwargs):
+        # Определяем количество постов за последние сутки:
+        minus_day = datetime.datetime.now() - datetime.timedelta(days=1)
+        print('minus_day = ', minus_day)
+        user_id = User.objects.get(username=self.request.user).id
+        print('user_id is ', user_id)
+        print('user is ', self.request.user)
+        if Author.objects.filter(user=self.request.user):
+            post_count = len(Post.objects.filter(
+                author=Author.objects.filter(user=self.request.user), time__gt=minus_day))
+        else:
+            post_count = 0
+        print('post_count = ', post_count)
+        if post_count < 3:
+            overposted = False
+        else:
+            overposted = True
+
         context = super().get_context_data(**kwargs)
         # вписываем наш фильтр в контекст
         context['filter'] = PostFilter(
             self.request.GET, queryset=self.get_queryset())
         context['choices'] = Post.TYPE_CHOICES
         context['form'] = PostForm()
+        context['overposted'] = overposted
         return context
 
     def post(self, request, *args, **kwargs):
@@ -256,23 +265,6 @@ class PostDeleteView(PermissionRequiredMixin, DeleteView):  # дженерик �
     queryset = Post.objects.all()
     # не забываем импортировать функцию reverse_lazy из пакета django.urls
     success_url = reverse_lazy('news:news')
-
-
-# class Posts(View):
-
-#     def get(self, request):
-#         posts = Post.objects.order_by('-time')
-#         # Создаём объект класса пагинатор, передаём ему список наших товаров и их количество для одной страницы
-#         p = Paginator(posts, 1)
-#         # Берём номер страницы из get-запроса. Если ничего не передали, будем показывать первую страницу
-#         posts = p.get_page(request.GET.get('page', 1))
-#         # Теперь вместо всех объектов в списке товаров хранится только нужная нам страница с товарами
-
-#         data = {
-#             'news': posts,
-#         }
-#         print(data)
-#         return render(request, 'news/news.html', data)
 
 
 class PostDetail(DetailView):
