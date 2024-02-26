@@ -2,6 +2,7 @@ from django.db import models
 # from django.conf import settings
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.core.cache import cache
 
 
 class Author(models.Model):
@@ -84,6 +85,12 @@ class Post(models.Model):
     # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
     def get_absolute_url(self):
         return f'/news/{self.id}'
+
+    def save(self, *args, **kwargs):
+        # сначала вызываем метод родителя, чтобы объект сохранился
+        super().save(*args, **kwargs)
+        # затем удаляем его из кэша, чтобы сбросить его
+        cache.delete(f'post-{self.pk}')
 
 
 class PostCategory(models.Model):
